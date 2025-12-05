@@ -9,7 +9,6 @@ position = np.array([0.0, 0.0, 0.0])
 velocity = np.array([0.0, 0.0, 0.0])
 interval = 1/20.0  # 20 Hz
 last_time = time.time()
-first_acceleration = np.array(list(sense.get_accelerometer_raw().values()))
 while True:
     while time.time() - last_time < interval:
         pass
@@ -18,7 +17,7 @@ while True:
 
     last_time = time.time()
 
-    acclelerations = np.round(acclelerations - first_acceleration, decimals=3)
+    acclelerations = np.round(acclelerations, decimals=3)
     rotations = np.round(rotations, decimals=3)
 
     # Rotate acceleration vector based on gyroscope data
@@ -28,6 +27,18 @@ while True:
     sin_roll = math.sin(math.radians(rotations[1]))
     cos_yaw = math.cos(math.radians(rotations[2]))
     sin_yaw = math.sin(math.radians(rotations[2]))
+
+    R_x = np.array([[1, 0, 0],
+                    [0, cos_roll, -sin_roll],
+                    [0, sin_roll, cos_roll]])
+    R_y = np.array([[cos_pitch, 0, sin_pitch],
+                    [0, 1, 0],
+                    [-sin_pitch, 0, cos_pitch]])
+    R_z = np.array([[cos_yaw, -sin_yaw, 0],
+                    [sin_yaw, cos_yaw, 0],
+                    [0, 0, 1]])
+    R = np.dot(R_z, np.dot(R_y, R_x))
+    acclelerations = np.dot(R, acclelerations)
 
     velocity = velocity + acclelerations * interval
     position = position + velocity * interval
