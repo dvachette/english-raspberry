@@ -42,7 +42,9 @@ while True:
     acclelerations = np.dot(R, acclelerations)
 
     # Cancel out gravity
-    acclelerations[2] = acclelerations[2] - 1.0
+    #//acclelerations[2] = acclelerations[2] - 1.0
+
+    # Integrate acceleration to get velocity and 
 
     velocity = velocity + acclelerations * interval
     position = position + velocity * interval
