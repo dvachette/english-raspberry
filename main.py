@@ -38,7 +38,7 @@ while True:
     R_z = np.array([[cos_yaw, -sin_yaw, 0],
                     [sin_yaw, cos_yaw, 0],
                     [0, 0, 1]])
-    R = np.dot(R_z, np.dot(R_y, R_x))
+    R = R_x @ R_y @ R_z
     acclelerations = np.dot(R, acclelerations)
 
     # Cancel out gravity
