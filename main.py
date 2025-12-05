@@ -17,8 +17,9 @@ while True:
 
     last_time = time.time()
 
-    acclelerations = np.round(acclelerations, decimals=3)
-    rotations = np.round(rotations, decimals=3)
+    acclelerations = np.round(acclelerations, decimals=2)
+    rotations = np.round(rotations, decimals=2)
+
 
     # Rotate acceleration vector based on gyroscope data
     cos_pitch = math.cos(math.radians(rotations[0]))
@@ -39,6 +40,9 @@ while True:
                     [0, 0, 1]])
     R = np.dot(R_z, np.dot(R_y, R_x))
     acclelerations = np.dot(R, acclelerations)
+
+    # Cancel out gravity
+    acclelerations[2] = acclelerations[2] - 9.81
 
     velocity = velocity + acclelerations * interval
     position = position + velocity * interval
